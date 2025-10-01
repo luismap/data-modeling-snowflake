@@ -67,5 +67,63 @@ contains all the information necessary to construct and deploy the design to a s
 creates new objects by selecting data from existing sources. This is done through views using the CTAS command, or other DML statements. At its core, transformational logic is SQL.
 * ex. transformational logic expressed as code ![alt text](images/tm.png)
 
+
+# snowflake architecture
+* A three tier approach (storage, compute, cloud services)
+![alt text](images/sf_arch.png)
+
+* compute layer
+* storage layer
+* service layer
+
+**storage layer physically** "stores data on disks in the cloud provider hosting the Snowflake
+account. As data is loaded into Snowflake, it is compressed, encrypted, and logically organized
+into tables, schemas, and databases. The users define the logical hierarchy of the database and
+its objects, while Snowflake takes care of the underlying partitioning and storage. The customer
+is billed only for the data they store, with no provisioning or sizing required"
+
+**compute layer** A virtual warehouse that provides CPU, RAM and t-shirt sizes. Vertical and horizontal scaling available.
+
+**services layer** "coordinates all account activity in this hybrid-layer model and manages
+everything from security to encryption to metadata. The services layer handles operations such as
+query parsing and optimization, data sharing, and caching. From login, the services layer is there
+for the user through every operation they perform in the warehouse. The amount of time-saving
+work and automation that the services layer provides is reflected in Snowflake’s marketing language: promising the user near-zero maintenance, along with low cost and exceptional performance."
+
+## snowflake features
+* zero copy cloning
+* time travel
+* hybrid tables (aka.HTAP:hybrid transactional analytical processing)
+
+# cost to consider when using snowflake p.84
+* storage cost
+* vw compute cost
+* serverless cost (snowpipe and query acceleration)
+* service layer compute cost
+* data transfer cost (ingress no, egress base on the cloud provider)
+
+# save on cost by using cache feature of snowflake
+* service layer (use metadata and query result cache)
+* vw cache (uses vw disk to cache data, will be purge when vw stops)
+
+
+**note** on query result cache to activate, the queries needs to:
+* be syntactically equivalent
+* Dynamic functions such as current_date() are not used
+* The data in the underlying tables has not changed
+* Users have the required permissions to access the underlying sources
+
+**note** on vw cache
+* balance cost of keeping vw alive to reuse cache VS just reading data
+
+Query result cache inner working.
+* query -> cache with a TTL of 24 hours
+* new query -> cache hit (under the firs 24 hours) -> set TTL of query cache to 31 days
+
+**note**: Snowflake runs entirely on virtually provisioned resources from cloud platforms (Amazon, Micro-
+soft, and Google Cloud). Snowflake handles all interactions with the cloud provider transparently,
+abstracting the underlying virtual resources and letting the customer manage their data through
+a unified three-layer architecture
+
 # general notes.
 * Snowflake’s scalable consumption-based pricing model requires users to fully understand its revolutionary three-tier cloud architecture and pair it with universal modeling principles to ensure they are unlocking value and not letting money evaporate into the cloud.
