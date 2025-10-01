@@ -125,5 +125,7 @@ soft, and Google Cloud). Snowflake handles all interactions with the cloud provi
 abstracting the underlying virtual resources and letting the customer manage their data through
 a unified three-layer architecture
 
-# general notes.
+
+
+# GENERAL NOTES.
 * Snowflake’s scalable consumption-based pricing model requires users to fully understand its revolutionary three-tier cloud architecture and pair it with universal modeling principles to ensure they are unlocking value and not letting money evaporate into the cloud.
