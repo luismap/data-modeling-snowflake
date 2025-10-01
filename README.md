@@ -125,7 +125,57 @@ soft, and Google Cloud). Snowflake handles all interactions with the cloud provi
 abstracting the underlying virtual resources and letting the customer manage their data through
 a unified three-layer architecture
 
+# snowflake objects
+**stages:** logical objects that abstract cloud filesystems so they can be used in a standard manner to
+load data into Snowflake. ![alt text](images/external_internal.png)
 
+    - can be internal or external
+    - interal uses the hosting provider storage
+    - external uses (s3, gcp buckets, azure containers)
+
+**tables:** physical tables logically grouped by schemas. Consist of columns with names, data types, and 
+optional constraints and properties.
+
+    - can be permanent/transient/temporary
+retention period for tables ![alt text](images/retention_period.png)
+
+**Stage metadata tables:** External and directory tables exist in Snowflake to allow users to access data in staged files as though selecting from regular tables.
+
+    - external: enable users to access staged file contents as if they were stored in regular tables.
+    - directory: External tables permit users to access data stored in external cloud storage using the same conventions as regular physical tables, but directory tables only show file metadata.
+
+**views:** store a SELECT statement over physical objects as an object in a schema.
+
+**materialized views:** physical tables that store the results of a view.
+When to use materialized views:
+
+    - The query results do not change often
+    - The view results are used significantly more frequently than data changes occur
+    - The query consumes a lot of compute resources
+
+**streams:** logical objects that capture data changes in underlying sources, including (physical tables, views, and external and directory tables). Whenever a DML operation occurs in the source object, a stream tracks the changes (inserts, deletions, and the before/after images of updates)
+
+When a stream is created, metadata columns are tacked onto the source object and begin tracking
+changes. ![alt text](images/stream_metadata_columns.png)
+
+Streams properties:
+
+    - consuming from stream, clears buffers
+    - failed consumption does not clear the buffer
+    - default retention period 14 days
+
+![alt text](images/stream_work.png)
+
+Type of Streams
+
+    - Standard (or delta): Records inserts, deletes, and updates. This type of stream is supported for tables, directory tables, and views
+    - Append/insert-only: Only tracks inserted records and ignores any updates or deletions. This stream type is supported for physical tables, directory tables, and views as append-only and, for external tables, as insert-only
+
+**change tracking**: hange tracking is enabled directly on tables, allowing Snowflake users to query CDC metadata. Change tracking uses the same metadata fields found in streams but appends them directly to a table. Unlike streams, the changes are not eliminated if they are used to update downstream objects; instead, the change tracking persists for the data retention time of the table.
+
+**tasks**: schedule and automate data loading and transformation. Tasks automate data pipelines by executing SQL in serial or parallel steps. Tasks can be combined with streams for continuous ETL workflows to process recently changed table rows. This can be done serverlessly (using auto-scalable Snowflake-managed compute clusters that do not require an active warehouse) or using a dedicated user-defined warehouse.
+
+* task tree with serial and parallel dependencies ![alt text](images/parallel_ser_task.png)
 
 # GENERAL NOTES.
 * Snowflake’s scalable consumption-based pricing model requires users to fully understand its revolutionary three-tier cloud architecture and pair it with universal modeling principles to ensure they are unlocking value and not letting money evaporate into the cloud.
