@@ -387,5 +387,35 @@ solution to collecting and managing telemetry data
     - Telemetry data comes from: Stored procedures/ Streamlit apps/ User-defined functions/ User-defined table functions
 
 
+# snowflake arch in modeling notation
+* example of a digram in chen notation ![alt text](images/chen_diag.png)
+* example of physical model using crows's foot notation ![alt text](images/crows_foot.png)
+
+note: the modeling conventions presented here will be a collage of multiple standards, the aim
+is to make is easily synchronizable between all phase of modelling (CLPT)
+
+## notations that will be used
+entities
+
+    - perpendicular corners in entities: strong entity
+    - rounded corners: weak entity
+
+ex. ![alt text](images/weak_strong.png)
+
+relationships
+
+* relationships crow's notation ![alt text](images/crows_notation.png)
+* reading crow notation ![alt text](images/crow_not_read.png)
+* ex sync logical and physical model ![alt text](images/sync_log_phy.png)
+
+subtypes and supertypes
+
+subtypes realationships can be 
+
+    - Complete/incomplete: Indicates whether all the subtypes are known or whether more can be added in the future, respectively.
+    - Inclusive/exclusive: Indicates whether the supertype can exist as multiple subtypes.
+ex. table depicting all posible subtypes relationship ![alt text](images/subtypes_rel.png)
+
+* example of a model in CLP diagram ![alt text](images/clp.png)
 # GENERAL NOTES.
 * Snowflake’s scalable consumption-based pricing model requires users to fully understand its revolutionary three-tier cloud architecture and pair it with universal modeling principles to ensure they are unlocking value and not letting money evaporate into the cloud.
