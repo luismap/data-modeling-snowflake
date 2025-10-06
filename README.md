@@ -1,3 +1,8 @@
+Notes base on the book Data Modeling with Snowflake 2nd edition
+buy the book at [amazon](https://www.amazon.com/Data-Modeling-Snowflake-accelerating-development/dp/1837028036)
+
+support the author.
+
 # modeling toolkit components
 * natural language semantics - words
 * technical semantics - sql
@@ -281,6 +286,105 @@ CONSTRAINT fk_ref_employee FOREIGN KEY ( employee_bkey ) REFERENCES employee ( e
 );
 
 ```
+
+# advance snowflake objects
+* iceberg tables. 
+
+    - can be managed(catalog inside snowflake) or unmanaged (catalog outside snowflake services, currently only read mode when accessing from snowflake)
+    - if manage, make sure only write through snowflake
+
+* **Snowflake managed Iceberg**: The organization operates in a multi-cloud and multi-team environment and wants interoperability with file formats along with DML operations, schema evolution, time travel, and the ability to report on data stored in Iceberg in Snowflake with performance demands on par with native tables.
+
+* **Externally managed Iceberg**: The organization operates in a multi-cloud and multi-team environment, and another cloud provider or catalog is already established as the owner of the datasets being stored in Iceberg. The data team wants to report on data stored in Iceberg in Snowflake with performance demands that exceed those of external tables.
+
+* **External tables**: The data team wants to provide read-only access to data stored in exter- nal stages in various supported formats, as if the data were actually stored in Snowflake.
+
+* **Standard tables**: This is the best practice recommendation when none of the above conditions are met, which offers the greatest flexibility and performance when working with data in the Snowflake platform.
+
+## Dynamic tables: 
+integrate transformational logic with data pipelines into a single, self-orchestrating object.
+[dynamic table info](https://docs.snowflake.com/en/user-guide/dynamic-tables-about)
+
+* refresh types
+
+    - incremental, full, auto.
+
+* controller pattern using dynamic tables.
+
+    - ensure all tables are set to refresh target_lag=dowstream
+    - create dummy controller table, target_lag=dowstream as well.
+    - create task to update dynamic table
+
+dynamic pipeline controller pattern![alt text](images/dynamic_pipeline.png)
+
+```sql
+CREATE DYNAMIC TABLE leaf1
+...
+;
+...
+CREATE DYNAMIC TABLE leafN
+...
+;
+
+CREATE DYNAMIC TABLE controller
+TARGET_LAG = DOWNSTREAM
+WAREHOUSE = <my dedicated warehouse>
+AS
+SELECT 1 AS dummy FROM <leaf1>, …, <leafN> LIMIT 0;
+
+CREATE OR REPLACE TASK daily_refresh
+WAREHOUSE = <same as dynamic table warehouse>
+SCHEDULE = <required schedule> --ex. 'USING CRON 0 6 * * * UTC'
+AS
+ALTER DYNAMIC TABLE controller REFRESH;
+```
+
+* comparison of dynamic tables, streams and tasks ![alt text](images/dt_s_task_comp.png)
+
+indexes
+
+    - primary key and unique create their own indexes
+    - use include when creating and index to include a subindex
+    - subindex is more efficient than creating a new index
+
+```sql
+CREATE OR REPLACE INDEX indexName ON tableName (col1, [col2]);
+
+CREATE HYBRID TABLE books (
+book_id INT PRIMARY KEY,
+book_title STRING,
+book_category STRING,
+INDEX idx_category (book_category) INCLUDE (book_title)
+);
+SELECT book_title FROM books WHERE book_category = 'Fiction';
+```
+
+quick thoughts about indexes
+
+    - Indexes increase storage costs by saving additional copies of a subset of the data.
+    - While they accelerate data retrieval, indexes add overhead to DML operations because they need to be updated synchronously as changes occur.
+    - Understanding the criticality and frequency of commonly run queries is important to determine whether an index justifies the added costs and DML overhead.
+
+when will an index be use
+
+    - A primary index is used: TableScan with Scan Mode = ROW_BASED is visible in the query profile.
+    - A secondary index is used: IndexScan with Scan Mode = ROW_BASED is visible in the query profile. The index name and access predicate details are also available.
+    - Column store is used: The query reads from a column store copy of the dataset. Index scans can also access object storage for Time Travel queries.
+
+## hybrid tables
+
+hybrid tables load types
+
+    - Bulk optimized load: Can only be performed the first time a hybrid table is created
+    - Incremental batch load: All subsequent loads use the non-optimized batch method, typically allowing 1 million records per minute.
+
+* hybrid vs standard tables ![alt text](images/hybrid_standard.png)
+
+## event tables
+solution to collecting and managing telemetry data
+
+    - By default, all Snowflake accounts include an event table called SNOWFLAKE.TELEMETRY.EVENTS
+    - Telemetry data comes from: Stored procedures/ Streamlit apps/ User-defined functions/ User-defined table functions
 
 
 # GENERAL NOTES.
