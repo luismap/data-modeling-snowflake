@@ -417,5 +417,31 @@ subtypes realationships can be
 ex. table depicting all posible subtypes relationship ![alt text](images/subtypes_rel.png)
 
 * example of a model in CLP diagram ![alt text](images/clp.png)
+
+# conceptual modeling into practice
+main point is that it focuses on capturing business entities and their relationships.
+
+quick reminder on kimballs multidimensional modeling process
+
+    - Define the business process
+    - Declare the grain
+    - Identify the dimensions
+    - Identify the facts
+
+* A bus matrix example ![alt text](images/bus_matrix.png)
+* conceptual model showing only dimensions ![alt text](images/concep_dim.png)
+* full conceptual model ![alt text](images/full_concept.png)
+
+Reverse engineering a model. Usually will give you a physical model.
+start by working in reverse of the kimball modeling process.
+
+    - classify each table into facts and dimensions
+    - find primary keys
+    - find fk an stablish relationships
+    - establish cardinality
+    - draw the physical model
+
+
+
 # GENERAL NOTES.
 * Snowflake’s scalable consumption-based pricing model requires users to fully understand its revolutionary three-tier cloud architecture and pair it with universal modeling principles to ensure they are unlocking value and not letting money evaporate into the cloud.
