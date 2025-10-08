@@ -441,6 +441,29 @@ start by working in reverse of the kimball modeling process.
     - establish cardinality
     - draw the physical model
 
+# logical modeling into practice
+when going from conceptual to logical. key questions
+
+    - how company identifies entity X (do this for all entities)
+    - assure by talking to business experts that facts grains are correct
+    - find out the measures of the fact tables
+
+![alt text](images/concept_to_logical.png)
+![alt text](images/fact_measures.png)
+
+In a many-to-many relationship, if the fact entity needs to be audited by
+its own. Then a new strong entity can be created.
+ex.
+* m-to-m orders, order need to be tracked alone ![alt text](images/orders.png)
+* create new weak entity to cover the usecase. line entity created ![alt text](images/line_entity.png)
+
+* to highlight m-to-m relationship in logical model, use diamond notation ![alt text](images/diamond.png)
+
+## Inheritance
+* a customer can be (loyal, or just customer) ![alt text](images/customer.png)
+* expanding diagram with inheritance ![alt text](images/cust_inherit.png)
+
+* a complete logical model ![alt text](images/complete_log.png)
 
 
 # GENERAL NOTES.
