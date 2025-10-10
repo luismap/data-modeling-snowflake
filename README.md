@@ -466,5 +466,74 @@ ex.
 * a complete logical model ![alt text](images/complete_log.png)
 
 
+# Database normalization
+ex unnormalized. ![alt text](images/unnormalized.png)
+
+1NF ![alt text](images/1nf.png)
+
+    - every record is unique
+    - every cell contains a single value
+
+
+2NF ![alt text](images/2nf.png)
+
+    - 1NF are satisfied
+    - Every non-candidate key attribute must depend on the whole candidate key (no partial
+dependencies)
+
+3NF ![alt text](images/3nf.png)
+
+    - 2NF are satisfied
+    - There are no transitive functional dependencies (A transitive functional dependency (TFD) is formed when a non-primary key column depends on another non-primary column)
+
+BCNF ![alt text](images/diners_3nf.png)
+
+    - note: very rarely scenarios where 3NF does not satisfied BCNF
+    - 3NF satisfied
+    - Every non-trivial functional dependency is itself a key
+    - usually found by looking at some hidden business logic
+
+* in bcnf ![alt text](images/bcnf.png)
+
+4NF ![alt text](images/4nf.png)
+
+    - BCNF is satisfied
+    - Every non-trivial functional and multivalued functional dependency begins with a superkey
+    - complicated to find, since business knowledge is require to find out
+
+
+* in 4nf ![alt text](images/in4nf.png)
+
+5NF
+
+    - 4NF satisfied
+    - Tables can not be decomposed further without loss of data
+    - difficult to achieve and usually unnecessary
+
+DKNF
+
+    - 5NF satisfied
+    - Domain constraints do not exist in any table
+
+* does not satisfied dknf ![alt text](images/no_dknf.png)
+* example of dknf infringement ![alt text](images/dknf_infringriment.png)
+* correct dknf ![alt text](images/dknf.png)
+
+6NF
+
+    - DKNF satisfied
+    - Every table contains a primary key and, at most, one attribute
+    - impractical for most business purposes
+
+* not 6nf ![alt text](images/no_6nf.png)
+* 6nf design ![alt text](images/6nf.png)
+
+Common data models in the normalization spectrum
+![alt text](images/n_spectrum.png)
+
+
+
+
+-----------------------
 # GENERAL NOTES.
 * Snowflake’s scalable consumption-based pricing model requires users to fully understand its revolutionary three-tier cloud architecture and pair it with universal modeling principles to ensure they are unlocking value and not letting money evaporate into the cloud.
